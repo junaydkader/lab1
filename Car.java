@@ -3,14 +3,14 @@ import java.awt.*;
 //WASSUUUUPPPP
 //tjjjjjenare
 
-public class Car {
-    public boolean turboOn;
-    //hej fasen
-    public int nrDoors; // Number of doors on the car
-    public double enginePower; // Engine power of the car
-    public double currentSpeed; // The current speed of the car
-    public Color color; // Color of the car
+public class Car implements Movable {
+    private int nrDoors; // Number of doors on the car
+    private double enginePower; // Engine power of the car
+    private double currentSpeed; // The current speed of the car
+    private Color color; // Color of the car
     public String modelName; // The car model name
+
+    public double angle; // Direction the car travels in degrees
 
     public Car(int nrDoors, Color color, double enginePower, String modelname){
         this.nrDoors = nrDoors;
@@ -20,66 +20,95 @@ public class Car {
         stopEngine();
     }
 
+    @Override
+    public void move() {
+        double angle = Math.toRadians(this.angle);
+        double x = Math.cos(angle) * this.currentSpeed;
+        double y = Math.sin(angle) * this.currentSpeed;
+
+        if (x < 0 ) {
+            turnLeft();
+        }
+        else if (x > 0) {
+            turnRight();
+        }
+    }
+
+    @Override
+    public void turnLeft() {
+        System.out.println("Turning left");
+
+    }
+
+    @Override
+    public void turnRight() {
+        System.out.println("Turning right");
+
+    }
+
     public int getNrDoors(){
 
-        return nrDoors;
+        return this.nrDoors;
     }
     public double getEnginePower(){
 
-        return enginePower;
+        return this.enginePower;
     }
 
     public double getCurrentSpeed(){
 
-        return currentSpeed;
+        return this.currentSpeed;
     }
 
     public Color getColor(){
 
-        return color;
+        return this.color;
     }
 
     public void setColor(Color clr){
 
-        color = clr;
+        this.color = clr;
     }
 
     public void startEngine(){
 
-        currentSpeed = 0.1;
+        this.currentSpeed = 0.1;
     }
 
     public void stopEngine(){
 
-        currentSpeed = 0;
+        this.currentSpeed = 0;
     }
 
     public double speedFactor(){
 
-        return enginePower * 0.01;
+        return this.enginePower * 0.01;
     }
 
     public void incrementSpeed(double amount){
-        currentSpeed = Math.min(getCurrentSpeed() + speedFactor() * amount,enginePower);
+        this.currentSpeed = Math.min(getCurrentSpeed() + speedFactor() * amount,this.enginePower);
     }
 
     public void decrementSpeed(double amount){
-
-        currentSpeed = Math.max(getCurrentSpeed() - speedFactor() * amount,0);
+        this.currentSpeed = Math.max(getCurrentSpeed() - speedFactor() * amount,0);
     }
 
     // TODO fix this method according to lab pm
     public void gas(double amount){
-
-        incrementSpeed(amount);
+        if (amount >= 0 && amount <= 1) {
+            incrementSpeed(amount);
+        }
     }
 
     // TODO fix this method according to lab pm
     public void brake(double amount){
+        if (amount >= 0 && amount <= 1) {
+            decrementSpeed(amount);
+        }
 
-        decrementSpeed(amount);
     }
 
-    
-
 }
+
+
+
