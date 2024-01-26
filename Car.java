@@ -3,45 +3,45 @@ import java.awt.*;
 //WASSUUUUPPPP
 //tjjjjjenare
 
-public class Car implements Movable {
+abstract class Car implements Movable {
     private int nrDoors; // Number of doors on the car
     private double enginePower; // Engine power of the car
     private double currentSpeed; // The current speed of the car
     private Color color; // Color of the car
-    public String modelName; // The car model name
+    private String modelName; // The car model name
 
-    public double angle; // Direction the car travels in degrees
-
+    private double angle; // Direction the car travels in degrees
+    private double x;
+    private double y;
     public Car(int nrDoors, Color color, double enginePower, String modelname){
         this.nrDoors = nrDoors;
         this.color = color;
         this.enginePower = enginePower;
         this.modelName = modelname;
+        this.x = 0;
+        this.y = 0;
         stopEngine();
     }
 
     @Override
     public void move() {
         double angle = Math.toRadians(this.angle);
-        double x = Math.cos(angle) * this.currentSpeed;
-        double y = Math.sin(angle) * this.currentSpeed;
-
-        if (x < 0 ) {
-            turnLeft();
-        }
-        else if (x > 0) {
-            turnRight();
-        }
+        x += Math.cos(angle) * this.currentSpeed;
+        y += Math.sin(angle) * this.currentSpeed;
     }
 
     @Override
     public void turnLeft() {
+        angle += Math.PI/2;
+        this.move();
         System.out.println("Turning left");
 
     }
 
     @Override
     public void turnRight() {
+        angle -= Math.PI/2;
+        this.move();
         System.out.println("Turning right");
 
     }
@@ -76,14 +76,11 @@ public class Car implements Movable {
     }
 
     public void stopEngine(){
-
         this.currentSpeed = 0;
     }
 
-    public double speedFactor(){
+    protected abstract double speedFactor();
 
-        return this.enginePower * 0.01;
-    }
 
     private void incrementSpeed(double amount){
         this.currentSpeed = Math.min(getCurrentSpeed() + speedFactor() * amount,this.enginePower);
@@ -98,6 +95,8 @@ public class Car implements Movable {
         if (amount >= 0 && amount <= 1) {
             incrementSpeed(amount);
         }
+        else {throw new IllegalArgumentException("Has to be between 0 and 1");
+        }
     }
 
     // TODO fix this method according to lab pm
@@ -105,7 +104,26 @@ public class Car implements Movable {
         if (amount >= 0 && amount <= 1) {
             decrementSpeed(amount);
         }
+        else {throw new IllegalArgumentException("Has to be between 0 and 1");
+        }
 
+
+    }
+
+    public double getAngle(){
+        return this.angle;
+    }
+
+    public double getX(){
+        return this.x;
+    }
+
+    public double getY(){
+        return this.y;
+    }
+
+    public String getModelName(){
+        return this.modelName;
     }
 
 }
